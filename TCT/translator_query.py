@@ -1,8 +1,88 @@
+from dataclasses import dataclass
+import json
+
 import requests
 from copy import deepcopy
 import pandas
 from TCT import translator_metakg
 from TCT import translator_kpinfo
+
+# TODO: query result dataclass?
+@dataclass
+class QueryResult:
+    """
+    Class representing query results (post-parsing)
+    """
+
+
+def build_query_json(subject_ids:list[str],
+        object_categories:list[str], predicates:list[str],
+        return_json:bool=True,
+        object_ids=None, subject_categories=None):
+    """
+    This constructs a query json for use with TRAPI. Queries are of the form [subject_ids]-[predicates]-[object_categories].
+    The output for the query contains all the subject-predicate-object triples where the subject is in subject_ids,
+    the object's category is in object_categories, and the predicate for the edge is in predicates.
+
+    For a description of the existing biolink categories and predicates, see https://biolink.github.io/biolink-model/
+
+    Params
+    ------
+    subject_ids
+        A list of subject CURIE IDs - example: ["NCBIGene:3845"]
+
+    object_categories
+        A list of strings representing the object categories that we are interested in. Example: ["biolink:Gene"]
+
+    predicates
+        A list of predicates that we are interested in. Example: ["biolink:positively_correlated_with", "biolink:physically_interacts_with"].
+
+    return_json
+        If true, returns a json string; if false, returns a dict.
+
+    object_ids
+        None by default
+    subject_categories
+        None by default
+
+    Returns
+    -------
+    A json string
+
+    Examples
+    --------
+    In this example, we want all genes that physically interact with gene 3845.
+    >>> build_query_json(['NCBIGene:3845'], ['biolink:Gene'], ['biolink:physically_interacts_with'])
+    "{'message': {'query_graph': {
+        'edges': {'e00': {'subject': 'n00', 'object': 'n01', 'predicates':['biolink:physically_interacts_with]}},
+        'nodes': {'n00': {'ids': ['NCBIGene:3845']}, 'n01': {'categories': ['biolink':Gene']}}}}}"
+    """
+    query_dict = {
+        'message': {
+            'query_graph': {
+                'edges': {
+                    'e00': {
+                        'subject': 'n00',
+                        'object': 'n01',
+                        'predicates': predicates
+                    }
+                },
+                'nodes': {
+                    'n00': {
+                        'ids': subject_ids
+                    },
+                    'n01': {
+                        'categories': object_categories
+                    }
+                },
+            }
+        }
+    }
+    if return_json:
+        return json.dumps(query_dict)
+    else:
+        return query_dict
+
 
 def get_translator_API_predicates() -> tuple[dict, pandas.DataFrame, dict]:
     '''
@@ -78,10 +158,23 @@ def optimize_query_json(query_json, API_name_cur, API_predicates):
 
     return query_json_cur
 
+
 def query_KP(API_name_cur, query_json, APInames, API_predicates):
     """
     Query an individual API with a TRAPI 1.5.0 query JSON,
     without modifying the original query_json.
+
+    Params
+    ------
+    API_name_cur
+    query_json
+    API_names
+    API_predicates
+
+    Returns
+    -------
+    A json string
+
     """
     API_url_cur = APInames[API_name_cur]
     # deep‐copy so we never touch the caller’s data
@@ -102,6 +195,7 @@ def query_KP(API_name_cur, query_json, APInames, API_predicates):
     else:
         #print(f"{API_name_cur}: Warning Code: {response.status_code}")
         return None
+
 
 def parallel_api_query(query_json, select_APIs, APInames, API_predicates,max_workers=1):
     '''
@@ -160,3 +254,60 @@ def parallel_api_query(query_json, select_APIs, APInames, API_predicates,max_wor
     len(result_merged)
 
     return(result_merged)
+
+
+def parse_KG(result):
+    '''
+    subject_object
+    subject
+    object
+    predicate
+    primary_knowledge_sources
+    aggregator_knowledge_sources
+    subject_predicate_object_primary_knowledge_sources_aggregator_knowledge_sources
+
+    '''
+    # edited Dec 5, 2023
+
+    result_parsed = {}
+    for i in result:
+
+        subject_object = result[i]['subject'] + "_" + result[i]['object']
+        # object_subject = result[i]['object'] + "_" + result[i]['subject']  # Unused variable
+        #result_parsed["predicate"].append(result[i]['predicate'])
+        #result_parsed["sources"].append(result[i]['sources'])
+        #result_parsed["subject"].append(result[i]['subject'])
+        #result_parsed["object"].append(result[i]['object'])
+        if subject_object not in result_parsed:
+            result_parsed[subject_object] = {}
+            result_parsed[subject_object]['predicate'] = [result[i]['predicate']]
+            result_parsed[subject_object]['subject'] = result[i]['subject']
+            result_parsed[subject_object]['object'] = result[i]['object']
+
+
+            for j in result[i]['sources']:
+                if j['resource_role'] == 'primary_knowledge_source':
+                    result_parsed[subject_object]['primary_knowledge_source'] = [j['resource_id']]
+
+                evidence =  result[i]['subject'] + "_" + result[i]['predicate'] + "_" + result[i]['object'] + "_" + j['resource_id']
+
+                if j['resource_role'] == 'aggregator_knowledge_source':
+                    result_parsed[subject_object]['aggregator_knowledge_source'] = [j['resource_id']]
+                    evidence = evidence + "_" + j['resource_id']
+            result_parsed[subject_object]['evidence'] = [evidence]
+
+        else: # subject_object in result_parsed:
+            result_parsed[subject_object]['predicate'].append(result[i]['predicate'])
+            for j in result[i]['sources']:
+                if j['resource_role'] == 'primary_knowledge_source':
+                    result_parsed[subject_object]['primary_knowledge_source'].append(j['resource_id'])
+                    evidence =  result[i]['subject'] + "_" + result[i]['predicate'] + "_" + result[i]['object'] + "_" + j['resource_id']
+                if j['resource_role'] == 'aggregator_knowledge_source':
+                    if 'aggregator_knowledge_source' not in result_parsed[subject_object]:
+                        result_parsed[subject_object]['aggregator_knowledge_source'] = [j['resource_id']]
+                    else:
+                        result_parsed[subject_object]['aggregator_knowledge_source'].append(j['resource_id'])
+                    evidence = evidence + "_" + j['resource_id']
+            result_parsed[subject_object]['evidence'].append(evidence)
+
+    return(result_parsed)
