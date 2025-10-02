@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import json
+import typing
 
 import requests
 from copy import deepcopy
@@ -14,11 +15,22 @@ class QueryResult:
     Class representing query results (post-parsing)
     """
 
+    subjects: list
+
+    subject_object: list
+    subject: list
+    predicate: list
+    primary_knowledge_sources: list
+    aggregator_knowledge_sources: list
+    subject_predicate_object_primary_knowledge_sources_aggregator_knowledge_sources: list
+
+
+
 
 def build_query_json(subject_ids:list[str],
         object_categories:list[str], predicates:list[str],
         return_json:bool=True,
-        object_ids=None, subject_categories=None):
+        object_ids=None, subject_categories=None) -> typing.Union[str, dict]:
     """
     This constructs a query json for use with TRAPI. Queries are of the form [subject_ids]-[predicates]-[object_categories].
     The output for the query contains all the subject-predicate-object triples where the subject is in subject_ids,
@@ -266,6 +278,7 @@ def parse_KG(result):
     aggregator_knowledge_sources
     subject_predicate_object_primary_knowledge_sources_aggregator_knowledge_sources
 
+    Returns a dict...
     '''
     # edited Dec 5, 2023
 
