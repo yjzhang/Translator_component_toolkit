@@ -1,5 +1,6 @@
 # translator graph node
 from dataclasses import dataclass
+import typing
 
 @dataclass
 class TranslatorAttribute:
@@ -9,7 +10,7 @@ class TranslatorAttribute:
 
     attribute_type_id: str
 
-    value: object
+    value: typing.Any
 
     value_type_id: str | None = None
 
@@ -49,7 +50,7 @@ class TranslatorNode:
     curie_synonyms: list[str] | None = None
     "list of synonymous CURIE ids (in the same order as synonyms)"
 
-    attributes: list = []
+    attributes: list[TranslatorAttribute] | None = None
     "List of node attributes (which are key-value pairs."
 
     # identifier is just another way to access/set the CURIE.
@@ -84,4 +85,6 @@ class TranslatorEdge:
     predicate: str
     "Predicates"
 
-    attributes: list = []
+    sources: list | None = None
+
+    attributes: list[TranslatorAttribute] | None = None
