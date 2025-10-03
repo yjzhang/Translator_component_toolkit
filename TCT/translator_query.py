@@ -101,26 +101,26 @@ def get_translator_API_predicates() -> tuple[dict, pandas.DataFrame, dict]:
 
     Returns
     --------
-    API_names : dict[str, str]
+    APInames : dict[str, str]
           dict of API names to URLs
 
     metaKG : pandas.DataFrame
-          This is a dataframe that represents the meta KG for the KPs in the API_names input -   columns include [TODO].
+          This is a dataframe that represents the meta KG for the KPs in the APInames input -   columns include [TODO].
 
     API_predicates : dict[str, list[str]]
         A dictionary of API names : a list of their predicates.
 
     Examples
     --------
-    >>> API_names, metaKG, API_predicates = get_translator_API_predicates()
+    >>> APInames, metaKG, API_predicates = get_translator_API_predicates()
     '''
-    Translator_KP_info, API_names = translator_kpinfo.get_translator_kp_info()
+    Translator_KP_info, APInames = translator_kpinfo.get_translator_kp_info()
     print(len(Translator_KP_info))
     # Step 2: Get metaKG and all predicates from Translator APIs through the SmartAPI system
-    metaKG = translator_metakg.get_KP_metadata(API_names) 
+    metaKG = translator_metakg.get_KP_metadata(APInames) 
     print(metaKG.shape)
     # Add metaKG from Plover API based KG resources
-    API_names, metaKG = translator_metakg.add_plover_API(API_names, metaKG)
+    APInames, metaKG = translator_metakg.add_plover_API(APInames, metaKG)
     print(metaKG.shape)
     # Step 3: list metaKG information
     # All_predicates = list(set(metaKG['Predicate']))  # Unused variable
@@ -132,7 +132,7 @@ def get_translator_API_predicates() -> tuple[dict, pandas.DataFrame, dict]:
     for api in API_withMetaKG:
         API_predicates[api] = list(set(metaKG[metaKG['API'] == api]['Predicate']))
 
-    return API_names, metaKG, API_predicates
+    return APInames, metaKG, API_predicates
 
 
 def optimize_query_json(query_json:dict, API_name_query:str, API_predicates:dict[str, list[str]]):
@@ -172,7 +172,7 @@ def optimize_query_json(query_json:dict, API_name_query:str, API_predicates:dict
 
 
 def query_KP(API_name_query:str, query_json:dict,
-        API_names:dict[str, str], API_predicates:dict[str, list[str]]):
+        APInames:dict[str, str], API_predicates:dict[str, list[str]]):
     """
     Query an individual API with a TRAPI 1.5.0 query JSON,
     without modifying the original query_json.
@@ -182,7 +182,7 @@ def query_KP(API_name_query:str, query_json:dict,
     API_name_query
         This is the name of the API to be queried
     query_json
-    API_names
+    APInames
         This is the first output of `get_translator_API_predicates()`. This is a dict of API names to URLs.
     API_predicates
         A dict of API names to a list of their predicates. This is the third output of get_translator_API_predicates().
@@ -195,7 +195,7 @@ def query_KP(API_name_query:str, query_json:dict,
     --------
     (TODO)
     """
-    API_url_cur = API_names[API_name_query]
+    API_url_cur = APInames[API_name_query]
     # deep‐copy so we never touch the caller’s data
     query_copy = deepcopy(query_json)
     # optimize on our private copy
@@ -217,7 +217,7 @@ def query_KP(API_name_query:str, query_json:dict,
 
 
 def parallel_api_query(query_json:dict, selected_APIs:list[str],
-        API_names:dict[str, str], API_predicates:dict[str, list[str]], max_workers=1):
+        APInames:dict[str, str], API_predicates:dict[str, list[str]], max_workers=1):
     '''
     Queries multiple APIs in parallel and merges the results into a single knowledge graph.
 
@@ -226,8 +226,8 @@ def parallel_api_query(query_json:dict, selected_APIs:list[str],
     query_json: dict
         the query JSON to be sent to each API
     selected_APIs: list
-        This is a list of API names (which are keys into API_names and API_predicates).
-    API_names : dict[str, str]
+        This is a list of API names (which are keys into APInames and API_predicates).
+    APInames : dict[str, str]
           dict of API names to URLs. This is the first output of get_translator_API_predicates().
     API_predicates
         A dict of API names to a list of their predicates. This is the third output of get_translator_API_predicates().
@@ -251,7 +251,7 @@ def parallel_api_query(query_json:dict, selected_APIs:list[str],
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         # copy the query_json for each API to avoid modifying the original query_json
         query_json_cur = deepcopy(query_json)
-        future_to_url = {executor.submit(query_KP, API_name_query, query_json_cur, API_names, API_predicates): API_name_query for API_name_query in selected_APIs}
+        future_to_url = {executor.submit(query_KP, API_name_query, query_json_cur, APInames, API_predicates): API_name_query for API_name_query in selected_APIs}
 
         for future in as_completed(future_to_url):
             url = future_to_url[future]

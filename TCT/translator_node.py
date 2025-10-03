@@ -53,6 +53,9 @@ class TranslatorNode:
     attributes: list[TranslatorAttribute] | None = None
     "List of node attributes (which are key-value pairs."
 
+    taxa: list[str] | None = None
+    "List of taxa for the given node (i.e. 'NCBITaxon:9606')"
+
     # identifier is just another way to access/set the CURIE.
     @property
     def identifier(self):

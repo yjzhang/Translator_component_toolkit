@@ -37,7 +37,7 @@ __all__ = [
     'plot_graph_by_predicates',
     'plot_graph_by_infores',
     'plot_graph_by_API',
-    'visulize_path',
+    'visualize_path',
     'get_curie',
     'merge_ranking_by_number_of_infores',
     'merge_by_ranking_index',
@@ -215,14 +215,14 @@ def get_SmartAPI_Translator_KP_info():
 
     #smartapi_df = smartapi_df[~smartapi_df['id'].isin(excluded_APIs)]
 
-    API_names = {}
+    APInames = {}
     for i in range(len(smartapi_df)):
         if prod_url_list[i] is not None:
-            #API_names[smartapi_df['title'][i]] = smartapi_df['prod_url'][i] + 'query/'
-            API_names[smartapi_df['title'].values[i]] = prod_url_list[i]
+            #APInames[smartapi_df['title'][i]] = smartapi_df['prod_url'][i] + 'query/'
+            APInames[smartapi_df['title'].values[i]] = prod_url_list[i]
         else:
-            API_names[smartapi_df['title'].values[i]] = ci_url_list[i]
-    return smartapi_df, API_names
+            APInames[smartapi_df['title'].values[i]] = ci_url_list[i]
+    return smartapi_df, APInames
 
 # used Dec 5, 2023 (Example_query_one_hop_with_category.ipynb)
 def list_Translator_APIs():
@@ -1066,7 +1066,7 @@ def Neighborhood_finder_mcp(input_node, node2_categories):
             input_node_category = input_node_info.types
 
     # Step 2: Select predicates and APIs based on the intermediate categories
-    sele_predicates, sele_APIs, API_URLs = sele_predicates_API(input_node_category,
+    sele_predicates, sele_APIs, API_URLs = select_predicates_API(input_node_category,
                                                                 node2_categories,
                                                                 metaKG, APInames)
 
@@ -1078,7 +1078,7 @@ def Neighborhood_finder_mcp(input_node, node2_categories):
 
     # Step 4: Query the APIs in parallel
     result = translator_query.parallel_api_query(query_json=query_json,
-                             select_APIs= sele_APIs,
+                             selected_APIs= sele_APIs,
                              APInames=APInames,
                              API_predicates=API_predicates,
                              max_workers=len(sele_APIs))
@@ -1086,13 +1086,14 @@ def Neighborhood_finder_mcp(input_node, node2_categories):
         # Step 7: Ranking the results. This ranking method is based on the number of unique
         # primary infores. It can only be used to rank the results with one defined node.
     result_ranked_by_primary_infores1 = rank_by_primary_infores(result_parsed, input_node_id)   # input_node1_id is the curie id of the
-    ranked_result = visulization_one_hop_ranking(result_ranked_by_primary_infores1, result_parsed, 
+    ranked_result = visualization_one_hop_ranking(result_ranked_by_primary_infores1, result_parsed, 
                                 num_of_nodes = 50, input_query = input_node_id, 
                                 fontsize = 5)
 
     return ranked_result
 
-def Neiborhood_finder(input_node, node2_categories, APInames, metaKG, API_predicates, input_node_category = []):
+
+def Neighborhood_finder(input_node, node2_categories, APInames, metaKG, API_predicates, input_node_category=[]):
     """
     This function is used to find the neighborhood of a given input node with intermediate categories.
 
@@ -1150,7 +1151,7 @@ def Neiborhood_finder(input_node, node2_categories, APInames, metaKG, API_predic
     # Step 4: Query the APIs in parallel
     result = translator_query.parallel_api_query(query_json=query_json,
                              selected_APIs=sele_APIs,
-                             API_names=APInames,
+                             APInames=APInames,
                              API_predicates=API_predicates,
                              max_workers=len(sele_APIs))
 
@@ -1159,6 +1160,7 @@ def Neiborhood_finder(input_node, node2_categories, APInames, metaKG, API_predic
         # primary infores. It can only be used to rank the results with one defined node.
     result_ranked_by_primary_infores1 = rank_by_primary_infores(result_parsed, input_node_id)   # input_node1_id is the curie id of the
     return input_node_id, result, result_parsed, result_ranked_by_primary_infores1
+
 
 def Path_finder(input_node1, input_node2, intermediate_categories, APInames, metaKG, API_predicates, input_node1_category = [], input_node2_category = []):
     """
@@ -1234,12 +1236,12 @@ def Path_finder(input_node1, input_node2, intermediate_categories, APInames, met
                                     sele_predicates2) # a list of predicates
 
     result1 = translator_query.parallel_api_query(query_json=query_json1,
-                             select_APIs = sele_APIs1,
+                             selected_APIs = sele_APIs1,
                              APInames=APInames,
                              API_predicates=API_predicates,
                              max_workers=len(sele_APIs1))
     result2 = translator_query.parallel_api_query(query_json=query_json2,
-                                select_APIs = sele_APIs2,
+                                selected_APIs = sele_APIs2,
                                 APInames=APInames,
                                 API_predicates=API_predicates,
                                 max_workers=len(sele_APIs2))
@@ -2249,13 +2251,13 @@ def load_translator_resources():
     from . import translator_kpinfo
     from . import translator_metakg
 
-    Translator_KP_info,APInames= translator_kpinfo.get_translator_kp_info()
+    Translator_KP_info, APInames= translator_kpinfo.get_translator_kp_info()
     metaKG = translator_metakg.get_KP_metadata(APInames)
-    APInames,metaKG = translator_metakg.add_plover_API(APInames, metaKG)
+    APInames, metaKG = translator_metakg.add_plover_API(APInames, metaKG)
     return  APInames, metaKG, Translator_KP_info
 
 
-def visulize_path(input_node1_id, intermediate_node, input_node3_id, result, result2):
+def visualize_path(input_node1_id, intermediate_node, input_node3_id, result, result2):
     forplot_subject = []
     forplot_object = []
     forplot_predicate = []

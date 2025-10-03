@@ -55,6 +55,8 @@ def lookup(query: str, return_top_response:bool=True, return_synonyms:bool=False
                     n.label = node['label']
                 if 'types' in node:
                     n.types = node['types']
+                if 'taxa' in node:
+                    n.taxa = node['taxa']
                 if return_synonyms and 'synonyms' in node:
                     n.synonyms = node['synonyms']
                 return n
@@ -67,6 +69,8 @@ def lookup(query: str, return_top_response:bool=True, return_synonyms:bool=False
                         n.label = node['label']
                     if 'types' in node:
                         n.types = node['types']
+                    if 'taxa' in node:
+                        n.taxa = node['taxa']
                     if return_synonyms and 'synonyms' in node:
                         n.synonyms = node['synonyms']
                     all_nodes.append(n)

@@ -71,12 +71,12 @@ def pathfinder(input_node1, input_node2, intermediate_categories, APInames, meta
 
     result1 = translator_query.parallel_api_query(query_json=query_json1,
                              selected_APIs = sele_APIs1,
-                             API_names=APInames,
+                             APInames=APInames,
                              API_predicates=API_predicates,
                              max_workers=len(sele_APIs1))
     result2 = translator_query.parallel_api_query(query_json=query_json2,
                                 selected_APIs = sele_APIs2,
-                                API_names=APInames,
+                                APInames=APInames,
                                 API_predicates=API_predicates,
                                 max_workers=len(sele_APIs2))
 

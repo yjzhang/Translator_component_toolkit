@@ -18,7 +18,7 @@ def get_translator_kp_info() -> tuple[pd.DataFrame, dict[str, str]]:
     smartapi_df : pandas.DataFrame
         Dataframe containing information about the APIS [TODO]
 
-    API_names : dict
+    APInames : dict
         dict of API names to URLs
 
 
@@ -128,11 +128,11 @@ def get_translator_kp_info() -> tuple[pd.DataFrame, dict[str, str]]:
         'test_url': test_url_list,
     })
     
-    API_names = {}
+    APInames = {}
     for i in range(len(smartapi_df)):
         if prod_url_list[i] is not None:
-            #API_names[smartapi_df['title'][i]] = smartapi_df['prod_url'][i] + 'query/'
-            API_names[smartapi_df['title'].values[i]] = prod_url_list[i]
+            #APInames[smartapi_df['title'][i]] = smartapi_df['prod_url'][i] + 'query/'
+            APInames[smartapi_df['title'].values[i]] = prod_url_list[i]
         else:
-            API_names[smartapi_df['title'].values[i]] = ci_url_list[i] 
-    return smartapi_df, API_names
+            APInames[smartapi_df['title'].values[i]] = ci_url_list[i] 
+    return smartapi_df, APInames
