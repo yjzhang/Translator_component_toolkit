@@ -1,31 +1,6 @@
+from .TCT import select_predicates_API
 from . import name_resolver
 from . import translator_query
-
-def select_predicates_API(input_node1_category,input_node2_category,metaKG, APInames):
-    '''
-    Selects predicates, APIs, and API URLs for the given input node categories.
-
-    -----------
-    Example:
-    >>> sele_predicates, sele_APIs, API_URLs = select_predicates_API(input_node1_category,input_node2_category,metaKG, APInames)
-
-    '''
-    sele_predicates = list(set(select_concept(sub_list=input_node1_category,
-                                                 obj_list=input_node2_category,
-                                                 metaKG=metaKG)))
-    sele_APIs = select_API(sub_list=input_node1_category,
-                           obj_list=input_node2_category,
-                           metaKG=metaKG)
-
-    API_URLs = get_Translator_API_URL(sele_APIs, APInames)
-    if len(sele_predicates) == 0:
-        print("No predicates found for the given categories.")
-    if len(sele_APIs) == 0:
-        print("No APIs found for the given categories.")
-    if len(API_URLs) == 0:
-        print("No API URLs found for the given categories.")
-
-    return sele_predicates, sele_APIs, API_URLs
 
 def pathfinder(input_node1, input_node2, intermediate_categories, APInames, metaKG, API_predicates, input_node1_category = [], input_node2_category = []):
     """
@@ -95,13 +70,13 @@ def pathfinder(input_node1, input_node2, intermediate_categories, APInames, meta
                                     sele_predicates2) # a list of predicates
 
     result1 = translator_query.parallel_api_query(query_json=query_json1,
-                             select_APIs = sele_APIs1,
-                             APInames=APInames,
+                             selected_APIs = sele_APIs1,
+                             API_names=APInames,
                              API_predicates=API_predicates,
                              max_workers=len(sele_APIs1))
     result2 = translator_query.parallel_api_query(query_json=query_json2,
-                                select_APIs = sele_APIs2,
-                                APInames=APInames,
+                                selected_APIs = sele_APIs2,
+                                API_names=APInames,
                                 API_predicates=API_predicates,
                                 max_workers=len(sele_APIs2))
 

@@ -20,18 +20,18 @@ __all__ = [
     'get_SmartAPI_Translator_KP_info',
     'list_Translator_APIs',
     'load_translator_resources',
-    'Neiborhood_finder',
+    'Neighborhood_finder',
     'Path_finder',
     'format_query_json',
     'select_API',
     'select_concept',
-    'sele_predicates_API',
+    'select_predicates_API',
     'parse_KG',
     'rank_by_primary_infores',
     'rank_by_primary_infores_input_as_list',
     'ID_convert_to_preferred_name_nodeNormalizer',
-    'visulization_one_hop_ranking',
-    'visulization_one_hop_ranking_input_as_list',
+    'visualization_one_hop_ranking',
+    'visualization_one_hop_ranking_input_as_list',
     'plot_heatmap',
     'plot_heatmap_ui',
     'plot_graph_by_predicates',
@@ -483,13 +483,13 @@ def select_concept(sub_list,obj_list,metaKG):
     df2 = metaKG.loc[(metaKG['Subject'].isin(obj_list)) & (metaKG['Object'].isin(sub_list))]
     df = pd.concat([df1,df2])
     return(set(list(df['Predicate'])))
-def sele_predicates_API(input_node1_category,input_node2_category,metaKG, APInames):
+def select_predicates_API(input_node1_category,input_node2_category,metaKG, APInames):
     '''
     Selects predicates, APIs, and API URLs for the given input node categories.
 
     -----------
     Example:
-    >>> sele_predicates, sele_APIs, API_URLs = sele_predicates_API(input_node1_category,input_node2_category,metaKG, APInames)
+    >>> sele_predicates, sele_APIs, API_URLs = select_predicates_API(input_node1_category,input_node2_category,metaKG, APInames)
 
     '''
     sele_predicates = list(set(select_concept(sub_list=input_node1_category,
@@ -614,7 +614,7 @@ def ID_convert_to_preferred_name_nodeNormalizer(id_list):
     return dic_id_map
 
 
-def visulization_one_hop_ranking_input_as_list(result_ranked_by_primary_infores,result_parsed ,
+def visualization_one_hop_ranking_input_as_list(result_ranked_by_primary_infores,result_parsed ,
                                  num_of_nodes = 20,
                                  input_query = "NCBIGene:3845",
                                  fontsize = 6,
@@ -727,7 +727,7 @@ def visulization_one_hop_ranking_input_as_list(result_ranked_by_primary_infores,
     return(predicates_by_nodes_df)
 
 # Used. Jan 5, 2024
-def visulization_one_hop_ranking(result_ranked_by_primary_infores,result_parsed ,
+def visualization_one_hop_ranking(result_ranked_by_primary_infores,result_parsed ,
                                  num_of_nodes = 20,
                                  input_query = "NCBIGene:3845",
                                  fontsize = 6,
@@ -1009,7 +1009,7 @@ def format_query_json(subject_ids, object_ids, subject_categories, object_catego
     return(query_json_temp)
 
 
-def Neiborhood_finder(input_node, node2_categories, APInames, metaKG, API_predicates, input_node_category = []):
+def Neighborhood_finder(input_node, node2_categories, APInames, metaKG, API_predicates, input_node_category = []):
     """
     This function is used to find the neighborhood of a given input node with intermediate categories.
 
@@ -1031,7 +1031,7 @@ def Neiborhood_finder(input_node, node2_categories, APInames, metaKG, API_predic
 
     --------------
     Example:
-    >>> input_node_id, result, result_parsed, result_ranked_by_primary_infores1 = Neiborhood_finder('Ovarian cancer',
+    >>> input_node_id, result, result_parsed, result_ranked_by_primary_infores1 = Neighborhood_finder('Ovarian cancer',
                                                                                             node2_categories = ['biolink:SmallMolecule', 'biolink:Drug', 'biolink:ChemicalEntity'],
                                                                                             APInames = APInames,
                                                                                             metaKG = metaKG,
@@ -1054,7 +1054,7 @@ def Neiborhood_finder(input_node, node2_categories, APInames, metaKG, API_predic
             input_node_category = input_node_info.types
 
     # Step 2: Select predicates and APIs based on the intermediate categories
-    sele_predicates, sele_APIs, API_URLs = sele_predicates_API(input_node_category,
+    sele_predicates, sele_APIs, API_URLs = select_predicates_API(input_node_category,
                                                                 node2_categories,
                                                                 metaKG, APInames)
 
@@ -1066,10 +1066,11 @@ def Neiborhood_finder(input_node, node2_categories, APInames, metaKG, API_predic
 
     # Step 4: Query the APIs in parallel
     result = translator_query.parallel_api_query(query_json=query_json,
-                             select_APIs= sele_APIs,
-                             APInames=APInames,
+                             selected_APIs=sele_APIs,
+                             API_names=APInames,
                              API_predicates=API_predicates,
                              max_workers=len(sele_APIs))
+
     result_parsed = parse_KG(result)
         # Step 7: Ranking the results. This ranking method is based on the number of unique
         # primary infores. It can only be used to rank the results with one defined node.
@@ -1130,10 +1131,10 @@ def Path_finder(input_node1, input_node2, intermediate_categories, APInames, met
 
 
     # Step 5: Select predicates and APIs based on the intermediate categories
-    sele_predicates1, sele_APIs1, API_URLs1 = sele_predicates_API(input_node1_category,
+    sele_predicates1, sele_APIs1, API_URLs1 = select_predicates_API(input_node1_category,
                                                                 intermediate_categories,
                                                                 metaKG, APInames)
-    sele_predicates2, sele_APIs2, API_URLs2 = sele_predicates_API(input_node2_category,
+    sele_predicates2, sele_APIs2, API_URLs2 = select_predicates_API(input_node2_category,
                                                                 intermediate_categories,
                                                                 metaKG, APInames)
 
