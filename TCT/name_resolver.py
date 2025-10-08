@@ -26,7 +26,7 @@ def lookup(query: str, return_top_response:bool=True, return_synonyms:bool=False
     return_synonyms : bool
         If true, the resulting TranslatorNode objects contain a list of synonyms. If false, they do not include synonyms. Default: False
     **kwargs
-        Other arguments to `lookup`. Some possible arguments: `limit=20` would limit the results to 20. `autocomplete=True` indicates that the query string can be incomplete. `biolink_type="biolink:Disease` indicates that all returned results should be diseases. For more examples, see [this](https://name-lookup.ci.transltr.io/docs#/lookup/lookup_curies_get_lookup_get).
+        Other arguments to `lookup`. Some possible arguments: `limit=20` would limit the results to 20. `autocomplete=True` indicates that the query string can be incomplete. `biolink_type="biolink:Disease"` indicates that all returned results should be diseases. `only_taxa='NCBITaxon:9606` indicates that only Homo sapiens results should be returned. For more examples, see [this](https://name-lookup.ci.transltr.io/docs#/lookup/lookup_curies_get_lookup_get).
 
     Returns
     -------
@@ -36,7 +36,9 @@ def lookup(query: str, return_top_response:bool=True, return_synonyms:bool=False
     --------
     >>> lookup('AML')
     TranslatorNode(curie='MONDO:0018874', label='acute myeloid leukemia', types=['biolink:Disease', 'biolink:DiseaseOrPhenotypicFeature', 'biolink:BiologicalEntity', 'biolink:ThingWithTaxon', 'biolink:NamedThing', 'biolink:Entity'], synonyms=None, curie_synonyms=None)
-
+    >>> lookup('IFNG', only_taxa='NCBITaxon:9606')
+    TranslatorNode(curie='NCBIGene:3458', label='IFNG', types=['biolink:Gene', 'biolink:GeneOrGeneProduct', 'biolink:GenomicEntity', 'biolink:ChemicalEntityOrGeneOrGeneProduct', 'biolink:PhysicalEssence', 'biolink:OntologyClass', 'biolink:BiologicalEntity', 'biolink:ThingWithTaxon', 'biolink:NamedThing', 'biolink:Entity', 'biolink:PhysicalEssenceOrOccurrent', 'biolink:MacromolecularMachineMixin', 'biolink:Protein', 'biolink:GeneProductMixin', 'biolink:Polypeptide', 'biolink:ChemicalEntityOrProteinOrPolypeptide'], synonyms=None, curie_synonyms=None, attributes=None, taxa=['NCBITaxon:9606'])
+    >>> lookup('AML', return_top_response=False, biolink_type="biolink:Disease")
     """
     path = urllib.parse.urljoin(URL, 'lookup')
     # set autocomplete to be false by default
