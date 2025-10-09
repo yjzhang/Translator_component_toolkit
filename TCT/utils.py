@@ -433,7 +433,7 @@ def list_Translator_APIs():
 
 
 # used. Dec 5, 2023 (Example_query_one_hop_with_category.ipynb)
-def select_APIs(sub_list,obj_list, metaKG):
+def select_APIs(sub_list, obj_list, metaKG):
     '''
     selects the APIs that can connect the given subject and object categories in the meta knowledge graph.
 

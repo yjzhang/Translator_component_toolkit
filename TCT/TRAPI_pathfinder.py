@@ -1,11 +1,12 @@
 from .utils import select_predicates_API, rank_by_primary_infores, merge_ranking_by_number_of_infores
-from . import translator_query
+from . import translator_query, node_normalizer
 
 
 
-def pathfinder(input_node1, input_node2, intermediate_categories, APInames, metaKG, API_predicates, input_node1_category = [], input_node2_category = []):
+def pathfinder(input_node1, input_node2, intermediate_categories, APInames, metaKG, API_predicates, input_node1_category=[], input_node2_category=[]):
     """
     This function is used to find paths between two input nodes with intermediate categories.
+    This runs the query in two directions, starting at node1 and node2.
 
     --------------
     Parameters:
@@ -26,11 +27,10 @@ def pathfinder(input_node1, input_node2, intermediate_categories, APInames, meta
     result_ranked_by_primary_infores2 (DataFrame): The ranked results for the second
     --------------
     Example:
-    >>> paths, input_node1_id, input_node2_id, result1, result2, result_parsed1, result_parsed2, result_ranked_by_primary_infores1, result_ranked_by_primary_infores2 = Path_finder('NCBIGene:7477', 'NCBIGene:4869', ['biolink:Gene', 'biolink:Protein']) # Input genes are WNT7B, NPM1
+    >>> paths, result1, result2, result_parsed1, result_parsed2, result_ranked_by_primary_infores1, result_ranked_by_primary_infores2 = Path_finder('NCBIGene:7477', 'NCBIGene:4869', ['biolink:Gene', 'biolink:Protein']) # Input genes are WNT7B, NPM1
 
     --------------
     """
-    from . import node_normalizer
     input_node1_id = input_node1
     input_node2_id = input_node2
     normalized_node_dict = node_normalizer.get_normalized_nodes([input_node1_id, input_node2_id])
