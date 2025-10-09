@@ -1,6 +1,7 @@
-from .TCT import select_predicates_API
-from . import name_resolver
+from .utils import select_predicates_API, rank_by_primary_infores, merge_ranking_by_number_of_infores
 from . import translator_query
+
+
 
 def pathfinder(input_node1, input_node2, intermediate_categories, APInames, metaKG, API_predicates, input_node1_category = [], input_node2_category = []):
     """
@@ -8,15 +9,15 @@ def pathfinder(input_node1, input_node2, intermediate_categories, APInames, meta
 
     --------------
     Parameters:
-    input_node1 (str): The first input node, can be a gene name, protein name, or any other identifier.
-    input_node2 (str): The second input node, can be a gene name, protein name, or any other identifier.
+    input_node1 (str): The CURIE id of the first input node.
+    input_node2 (str): The CURIE id of the second input node.
     intermediate_categories (list): A list of intermediate categories to be used in the path finding process.
-
+    APInames: output of translator_query.get_translator_API_predicates()
+    metaKG: output of translator_query.get_translator_API_predicates()
+    API_predicates: output of translator_query.get_translator_API_predicates()
     --------------
     Returns:
     paths (DataFrame): A DataFrame containing the paths found between the two input nodes.
-    input_node1_id (str): The curie id of the first input node.
-    input_node2_id (str): The curie id of the second input node.
     result1 (dict): The result of the query for the first input node.
     result2 (dict): The result of the query for the second input node.
     result_parsed1 (DataFrame): The parsed results for the first input node.
@@ -25,13 +26,16 @@ def pathfinder(input_node1, input_node2, intermediate_categories, APInames, meta
     result_ranked_by_primary_infores2 (DataFrame): The ranked results for the second
     --------------
     Example:
-    >>> paths, input_node1_id, input_node2_id, result1, result2, result_parsed1, result_parsed2, result_ranked_by_primary_infores1, result_ranked_by_primary_infores2 = Path_finder('WNT7B', 'NPM1', ['biolink:Gene', 'biolink:Protein'])
-    --------------
+    >>> paths, input_node1_id, input_node2_id, result1, result2, result_parsed1, result_parsed2, result_ranked_by_primary_infores1, result_ranked_by_primary_infores2 = Path_finder('NCBIGene:7477', 'NCBIGene:4869', ['biolink:Gene', 'biolink:Protein']) # Input genes are WNT7B, NPM1
 
+    --------------
     """
-    input_node1_info = name_resolver.lookup(input_node1)
-    input_node1_id = input_node1_info.curie
-    print(input_node1_id)
+    from . import node_normalizer
+    input_node1_id = input_node1
+    input_node2_id = input_node2
+    normalized_node_dict = node_normalizer.get_normalized_nodes([input_node1_id, input_node2_id])
+    input_node1_info = normalized_node_dict[input_node1]
+    print(input_node1_info)
     input_node1_list = [input_node1_id]
     if len(input_node1_category) == 0:
         input_node1_category = input_node1_info.types
@@ -40,9 +44,8 @@ def pathfinder(input_node1, input_node2, intermediate_categories, APInames, meta
         if len(input_node1_category) == 0:
             input_node1_category = input_node1_info.types
 
-    input_node2_info = name_resolver.lookup(input_node2)
-    input_node2_id = input_node2_info.curie
-    print(input_node2_id)
+    input_node2_info = normalized_node_dict[input_node2_id]
+    print(input_node2_info)
     input_node2_list = [input_node2_id]
 
     if len(input_node2_category) == 0:
@@ -96,5 +99,5 @@ def pathfinder(input_node1, input_node2, intermediate_categories, APInames, meta
                                             fontsize=10,
                                             title_fontsize=12,)
 
-    return paths,  input_node1_id, input_node2_id, result1, result2, result_parsed1, result_parsed2, result_ranked_by_primary_infores1, result_ranked_by_primary_infores2
+    return paths, result1, result2, result_parsed1, result_parsed2, result_ranked_by_primary_infores1, result_ranked_by_primary_infores2
 

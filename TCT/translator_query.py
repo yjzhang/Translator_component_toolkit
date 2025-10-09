@@ -5,8 +5,8 @@ import typing
 import requests
 from copy import deepcopy
 import pandas
-from TCT import translator_metakg
-from TCT import translator_kpinfo
+from . import translator_metakg
+from . import translator_kpinfo
 
 
 # TODO: query result dataclass?
