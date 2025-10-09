@@ -106,6 +106,7 @@ def get_preferred_names(id_list:list[str], batch_limit=500, **kwargs) -> dict[st
         for curie in id_sublist:
             if curie not in normalized_nodes or normalized_nodes[curie] is None:
                 unmapped_ids.append(curie)
+                name_map[curie] = curie
             else:
                 label = normalized_nodes[curie].label
                 if label is None:
