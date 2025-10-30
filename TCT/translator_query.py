@@ -17,7 +17,6 @@ class QueryResult:
     """
 
     subjects: list
-
     subject_object: list
     subject: list
     predicate: list
