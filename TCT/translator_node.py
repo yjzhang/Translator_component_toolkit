@@ -71,6 +71,22 @@ class TranslatorNode:
     def categories(self):
         return self.types
 
+    @classmethod
+    def from_dict(cls, data_dict:dict, return_synonyms=False):
+        """Creates a TranslatorNode object from a data dict."""
+        if 'curie' not in data_dict:
+            raise ValueError('The input data dict must have a "curie" key.')
+        n = cls(data_dict['curie'])
+        if 'label' in data_dict:
+            n.label = data_dict['label']
+        if 'types' in data_dict:
+            n.types = data_dict['types']
+        if 'taxa' in data_dict:
+            n.taxa = data_dict['taxa']
+        if return_synonyms and 'synonyms' in node:
+            n.synonyms = node['synonyms']
+        return n
+
 
 
 @dataclass

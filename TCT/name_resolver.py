@@ -65,16 +65,7 @@ def lookup(query: str, return_top_response:bool=True, return_synonyms:bool=False
             else:
                 all_nodes = []
                 for node in result:
-                    curie = node['curie']
-                    n = TranslatorNode(curie)
-                    if 'label' in node:
-                        n.label = node['label']
-                    if 'types' in node:
-                        n.types = node['types']
-                    if 'taxa' in node:
-                        n.taxa = node['taxa']
-                    if return_synonyms and 'synonyms' in node:
-                        n.synonyms = node['synonyms']
+                    n = TranslatorNode.from_dict(node, return_synonyms)
                     all_nodes.append(n)
                 return all_nodes
     else:
@@ -106,14 +97,7 @@ def synonyms(query: str, **kwargs):
         else:
             all_nodes = {}
             for k, node in result.items():
-                curie = node['curie']
-                n = TranslatorNode(curie)
-                if 'preferred_name' in node:
-                    n.label = node['preferred_name']
-                if 'types' in node:
-                    n.types = node['types']
-                if 'names' in node:
-                    n.synonyms = node['names']
+                n = TranslatorNode.from_dict(node, return_synonyms)
                 all_nodes[k] = n
             return all_nodes
     else:
@@ -143,7 +127,7 @@ def batch_lookup(strings:list[str], size: int=25, return_top_response:bool=True,
     return_synonyms : bool
         If true, the resulting TranslatorNode objects contain a list of synonyms. If false, they do not include synonyms. Default: False
     **kwargs
-        Other arguments to `bulk-lookup`
+        Other arguments to `bulk-lookup`.  Some possible arguments: `autocomplete=True` indicates that the query string can be incomplete. `biolink_types=["biolink:Disease", "biolink:Gene"]` indicates that all returned results should be diseases or genes. `only_taxa='NCBITaxon:9606` indicates that only Homo sapiens results should be returned.
 
     Returns
     -------
@@ -173,13 +157,7 @@ def batch_lookup(strings:list[str], size: int=25, return_top_response:bool=True,
                     nodes = result.get(s, [])
                     translator_nodes = []
                     for node in nodes: 
-                        n = TranslatorNode(node['curie'])
-                        if 'label' in node:
-                            n.label = node['label']
-                        if 'types' in node:
-                            n.types = node['types']
-                        if return_synonyms and 'synonyms' in node:
-                            n.synonyms = node['synonyms']
+                        n = TranslatorNode.from_dict(node, return_synonyms)
                         translator_nodes.append(n)
                     if return_top_response:
                         if translator_nodes:
