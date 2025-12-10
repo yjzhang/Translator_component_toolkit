@@ -50,6 +50,7 @@ pip install -e .
 - Build: `uv build`
 - Install dependencies: `uv sync`
 - Run in UV environment: `uv run python your_script.py`
+- Running tests: `uv run pytest`
 
 **Using pip:**
 - Build: `python -m build`
