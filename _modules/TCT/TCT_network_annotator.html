@@ -226,13 +226,11 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; input_identifiers = [&#39;NCBIGene:6774&#39;, &#39;NCBIGene:4170&#39;,&#39;NCBIGene:4792&#39;,&#39;NCBIGene:4288&#39;,&#39;NCBIGene:596&#39;,&#39;NCBIGene:581&#39;,&#39;NCBIGene:836&#39;,&#39;NCBIGene:6777&#39;,&#39;NCBIGene:4790&#39;,&#39;NCBIGene:545&#39;]</span>
-
 <span class="sd">    &gt;&gt;&gt; result, result_parsed = TCT_neighborhood_finder.neighborhood_finder_multiple_inputs(input_identifiers,</span>
 <span class="sd">                                                                                            node2_categories = [&#39;biolink:Gene&#39;,&#39;biolink:Protein&#39;],</span>
 <span class="sd">                                                                                            APInames = APInames,</span>
 <span class="sd">                                                                                            metaKG = metaKG,</span>
 <span class="sd">                                                                                            API_predicates = API_predicates)   </span>
-
 <span class="sd">    &gt;&gt;&gt; result = TCT_network_annotator.get_connected_graph(result_parsed, input_identifiers)</span>
 <span class="sd">    &gt;&gt;&gt; import datetime</span>
 <span class="sd">    &gt;&gt;&gt; import json</span>

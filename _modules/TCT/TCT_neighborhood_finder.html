@@ -263,7 +263,7 @@
 <span class="sd">        The ranked results based on primary infores.</span>
 
 <span class="sd">    Examples</span>
-<span class="sd">    -------</span>
+<span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; input_node_id, result, result_parsed, result_ranked_by_primary_infores1 = neighborhood_finder(&#39;MONDO:0008170&#39;, #Ovarian Cancer</span>
 <span class="sd">                                                                                            node2_categories = [&#39;biolink:SmallMolecule&#39;, &#39;biolink:Drug&#39;, &#39;biolink:ChemicalEntity&#39;],</span>
 <span class="sd">                                                                                            APInames = APInames,</span>
@@ -362,11 +362,11 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; input_node_id, result, result_parsed, result_ranked_by_primary_infores1 = neighborhood_finder(&#39;MONDO:0008170&#39;, #Ovarian Cancer</span>
-<span class="sd">                                                                                            node2_categories = [&#39;biolink:SmallMolecule&#39;, &#39;biolink:Drug&#39;, &#39;biolink:ChemicalEntity&#39;],</span>
-<span class="sd">                                                                                            APInames = APInames,</span>
-<span class="sd">                                                                                            metaKG = metaKG,</span>
-<span class="sd">                                                                                            API_predicates = API_predicates)</span>
+<span class="sd">    &gt;&gt;&gt; result, result_parsed = neighborhood_finder_multiple_inputs([&#39;NCBIGene:6774&#39;, &#39;NCBIGene:4170&#39;, &#39;NCBIGene:4792&#39;],</span>
+<span class="sd">                                                                    node2_categories = [&#39;biolink:SmallMolecule&#39;, &#39;biolink:Drug&#39;, &#39;biolink:ChemicalEntity&#39;],</span>
+<span class="sd">                                                                    APInames = APInames,</span>
+<span class="sd">                                                                    metaKG = metaKG,</span>
+<span class="sd">                                                                    API_predicates = API_predicates)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">node_normalizer</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">translator_query</span>

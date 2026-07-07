@@ -39,7 +39,7 @@
 <dt class="sig sig-object py" id="TCT.TCT_neighborhood_finder.neighborhood_finder">
 <span class="sig-prename descclassname"><span class="pre">TCT.TCT_neighborhood_finder.</span></span><span class="sig-name descname"><span class="pre">neighborhood_finder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node2_categories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">APInames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metaKG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">API_predicates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_node_category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predicates_subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TCT/TCT_neighborhood_finder.html#neighborhood_finder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TCT.TCT_neighborhood_finder.neighborhood_finder" title="Link to this definition">¶</a></dt>
 <dd><p>This function is used to find the neighborhood of a given input node with intermediate categories.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>input_node</strong><span class="classifier">str</span></dt><dd><p>The input node - should be a CURIE id.</p>
@@ -68,19 +68,17 @@
 </dd>
 <dt><strong>result_ranked_by_primary_infores</strong><span class="classifier">DataFrame</span></dt><dd><p>The ranked results based on primary infores.</p>
 </dd>
-<dt>Examples</dt><dd></dd>
 </dl>
-<blockquote>
-<div></div></blockquote>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">input_node_id</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">result_parsed</span><span class="p">,</span> <span class="n">result_ranked_by_primary_infores1</span> <span class="o">=</span> <span class="n">neighborhood_finder</span><span class="p">(</span><span class="s1">&#39;MONDO:0008170&#39;</span><span class="p">,</span> <span class="c1">#Ovarian Cancer</span>
-<span class="go">    node2_categories = [&#39;biolink:SmallMolecule&#39;, &#39;biolink:Drug&#39;, &#39;biolink:ChemicalEntity&#39;],</span>
-<span class="go">    APInames = APInames,</span>
-<span class="go">    metaKG = metaKG,</span>
-<span class="go">    API_predicates = API_predicates)</span>
-</pre></div>
-</div>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">input_node_id</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">result_parsed</span><span class="p">,</span> <span class="n">result_ranked_by_primary_infores1</span> <span class="o">=</span> <span class="n">neighborhood_finder</span><span class="p">(</span><span class="s1">&#39;MONDO:0008170&#39;</span><span class="p">,</span> <span class="c1">#Ovarian Cancer</span>
+<span class="go">                                                                                        node2_categories = [&#39;biolink:SmallMolecule&#39;, &#39;biolink:Drug&#39;, &#39;biolink:ChemicalEntity&#39;],</span>
+<span class="go">                                                                                        APInames = APInames,</span>
+<span class="go">                                                                                        metaKG = metaKG,</span>
+<span class="go">                                                                                        API_predicates = API_predicates)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -120,11 +118,11 @@
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">input_node_id</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">result_parsed</span><span class="p">,</span> <span class="n">result_ranked_by_primary_infores1</span> <span class="o">=</span> <span class="n">neighborhood_finder</span><span class="p">(</span><span class="s1">&#39;MONDO:0008170&#39;</span><span class="p">,</span> <span class="c1">#Ovarian Cancer</span>
-<span class="go">                                                                                        node2_categories = [&#39;biolink:SmallMolecule&#39;, &#39;biolink:Drug&#39;, &#39;biolink:ChemicalEntity&#39;],</span>
-<span class="go">                                                                                        APInames = APInames,</span>
-<span class="go">                                                                                        metaKG = metaKG,</span>
-<span class="go">                                                                                        API_predicates = API_predicates)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="p">,</span> <span class="n">result_parsed</span> <span class="o">=</span> <span class="n">neighborhood_finder_multiple_inputs</span><span class="p">([</span><span class="s1">&#39;NCBIGene:6774&#39;</span><span class="p">,</span> <span class="s1">&#39;NCBIGene:4170&#39;</span><span class="p">,</span> <span class="s1">&#39;NCBIGene:4792&#39;</span><span class="p">],</span>
+<span class="go">                                                                node2_categories = [&#39;biolink:SmallMolecule&#39;, &#39;biolink:Drug&#39;, &#39;biolink:ChemicalEntity&#39;],</span>
+<span class="go">                                                                APInames = APInames,</span>
+<span class="go">                                                                metaKG = metaKG,</span>
+<span class="go">                                                                API_predicates = API_predicates)</span>
 </pre></div>
 </div>
 </dd></dl>
