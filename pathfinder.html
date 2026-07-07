@@ -76,6 +76,16 @@
 </dl>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query_json_temp</span> <span class="o">=</span> <span class="n">format_query_json_for_pathfinder_with_constraints</span><span class="p">(</span>
+<span class="go">    subject_ids=&#39;NCBIGene:6774&#39;,</span>
+<span class="go">    object_ids=&#39;NCBIGene:4170&#39;,</span>
+<span class="go">    subject_categories=[&#39;biolink:Gene&#39;],</span>
+<span class="go">    object_categories=[&#39;biolink:Gene&#39;],</span>
+<span class="go">    predicates=[&#39;biolink:related_to&#39;],</span>
+<span class="go">    constraints=[&#39;biolink:Protein&#39;])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
