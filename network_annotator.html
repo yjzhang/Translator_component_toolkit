@@ -40,46 +40,20 @@
 <span class="sig-prename descclassname"><span class="pre">TCT.TCT_network_annotator.</span></span><span class="sig-name descname"><span class="pre">get_connected_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_parsed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_identifiers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TCT/TCT_network_annotator.html#get_connected_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TCT.TCT_network_annotator.get_connected_graph" title="Link to this definition">¶</a></dt>
 <dd><p>This function is used to extract the connected graph from the returned graph based on neighborhood finder from multiple inputs. 
 It will only include the input nodes and the nodes that are connected to the input nodes with degree greater than 1.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>result_parsed (dict)</strong></dt><dd><p>The parsed results for results from TCT_neighborhood_finder.neighborhood_finder_multiple_inputs().</p>
+<dt><strong>result_parsed</strong><span class="classifier">dict</span></dt><dd><p>The parsed results for results from TCT_neighborhood_finder.neighborhood_finder_multiple_inputs().</p>
 </dd>
-<dt><strong>input_identifiers (list)</strong></dt><dd><p>A list of input node identifiers, which are also input for TCT_neighborhood_finder.neighborhood_finder_multiple_inputs().</p>
+<dt><strong>input_identifiers</strong><span class="classifier">list</span></dt><dd><p>A list of input node identifiers, which are also input for TCT_neighborhood_finder.neighborhood_finder_multiple_inputs().</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>result_parsed (dict)</dt><dd><p>The connected graph extracted from the parsed results.</p>
+<dt><strong>result_parsed</strong><span class="classifier">dict</span></dt><dd><p>The connected graph extracted from the parsed results.</p>
 </dd>
 </dl>
-<blockquote>
-<div></div></blockquote>
-<dl class="simple">
-<dt>Example:</dt><dd></dd>
-</dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt;</span>
-<span class="go">    ..</span>
-</pre></div>
-</div>
-<dl class="simple">
-<dt>input_identifiers = [‘NCBIGene:6774’, ‘NCBIGene:4170’,’NCBIGene:4792’,’NCBIGene:4288’,’NCBIGene:596’,’NCBIGene:581’,’NCBIGene:836’,’NCBIGene:6777’,’NCBIGene:4790’,’NCBIGene:545’]</dt><dd></dd>
-<dt>result, result_parsed = TCT_neighborhood_finder.neighborhood_finder_multiple_inputs(input_identifiers,</dt><dd><p>node2_categories = [‘biolink:Gene’,’biolink:Protein’],
-APInames = APInames,
-metaKG = metaKG,
-API_predicates = API_predicates)</p>
-</dd>
-<dt>result = TCT_network_annotator.get_connected_graph(result_parsed, input_identifiers)</dt><dd></dd>
-<dt>import datetime</dt><dd></dd>
-<dt>import json</dt><dd></dd>
-<dt>timestamp = datetime.datetime.now().strftime(‘%Y%m%d_%H%M%S’)</dt><dd></dd>
-<dt>with open(‘./PathFinder_testing_results/’+’<a href="#id1"><span class="problematic" id="id2">TCT_neighborhood_finder_result_</span></a>’+’_’+timestamp+’.json’, ‘w’) as f:</dt><dd><p>json.dump(result, f)</p>
-</dd>
-<dt># visualize the result using the TCT visualization tool (<a class="reference external" href="https://github.com/NCATSTranslator/Translator_component_toolkit/blob/main/notebooks/visulize_path_finder_results.html">https://github.com/NCATSTranslator/Translator_component_toolkit/blob/main/notebooks/visulize_path_finder_results.html</a>).</dt><dd></dd>
-</dl>
-<blockquote>
-<div></div></blockquote>
 </dd>
 </dl>
 </dd></dl>
